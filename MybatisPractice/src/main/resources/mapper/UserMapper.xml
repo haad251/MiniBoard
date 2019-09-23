@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="my.batis.practice.dao.UserMapper">
+
+	<insert id="insertUser" parameterType="User">
+		INSERT INTO USERTABLE
+		VALUES(#{id},#{pw},#{name},#{phone},#{email},#{birthdate},SYSDATE)
+	</insert>
+	
+	<select id="selectUser" parameterType="User" resultType="User">
+		SELECT * FROM USERTABLE
+		WHERE id=#{id} AND pw=#{pw}
+	</select>
+
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM USERTABLE
+		WHERE id=#{id}
+	</delete>
+	
+	<update id="updateUser" parameterType="User">
+		UPDATE USERTABLE
+		SET pw=#{pw},
+			name=#{name},
+			phone=#{phone},
+			email=#{email},
+			birthdate=#{birthdate}
+		WHERE id=#{id}
+	</update>
+	
+</mapper>

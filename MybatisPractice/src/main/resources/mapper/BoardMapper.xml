@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="my.batis.practice.dao.BoardMapper">
+
+	<insert id="insertBoard" parameterType="Board">
+		INSERT INTO BOARD(board_seq, id, title, content, indate)
+		VALUES(board_seq.nextval,#{id},#{title},#{content},SYSDATE)
+
+	</insert>
+	
+	
+	<select id="selectAllBoard" resultType="Board" >
+		SELECT board_seq, id, title, content, indate 
+		FROM BOARD
+		ORDER BY indate desc
+	</select>
+
+	<select id="selectBoard" parameterType="String" resultType="Board">
+		SELECT board_seq, id, title, content, indate 
+		FROM BOARD	
+		WHERE board_seq=#{board_seq}
+	</select>
+	
+	<delete id="deleteBoard" parameterType="String">
+		DELETE 
+		FROM BOARD
+		WHERE board_seq=#{board_seq}
+	</delete>
+
+	<update id="updateBoard" parameterType="Board">
+		UPDATE BOARD
+		SET title=#{title},
+			content=#{content}
+		WHERE board_seq=#{board_seq}
+	</update>
+	
+	<select id="selectCount" resultType="int" parameterType="String">
+		SELECT COUNT(BOARD_SEQ)
+		FROM BOARD
+		<if test="_parameter!=null">
+		WHERE title LIKE '%'||#{keyword}||'%' OR content LIKE '%'||#{keyword}||'%'
+		</if>
+	</select>
+	
+	<select id="searchBoard" parameterType="String" resultType="Board">
+		SELECT board_seq, id, title, content, indate 
+		FROM BOARD	
+		WHERE title LIKE '%'||#{title}||'%' OR content LIKE '%'||#{content}||'%'
+<!-- 		like '%A%' -->
+	</select>
+	
+	
+	<insert id="insertFile" parameterType="File">
+		INSERT INTO FILETABLE(
+			file_seq,board_seq,org_name,sav_name
+		)
+		VALUES(
+			file_seq.nextval,
+			(SELECT MAX(BOARD_SEQ) FROM BOARD),
+			#{org_name},
+			#{sav_name}
+		)
+	</insert>
+	
+	
+
+	<select id="selectFile" resultType="File" >
+			SELECT * 
+			FROM filetable
+			WHERE board_seq=#{board_seq}
+	</select>
+	
+
+	<select id="selectFileBySeq" parameterType="String" resultType="File" >
+			SELECT * 
+			FROM filetable
+			WHERE file_seq=#{file_seq}
+	</select>
+	
+
+
+</mapper>
